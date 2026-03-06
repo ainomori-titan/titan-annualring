@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('rings');
+const sortedPosts = allPosts.sort((a, b) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+const categoryEmoji: Record<string, string> = {
+  '年輪': '🪵',
+  '根系觀察': '🌿',
+  '枝葉日記': '🍃',
+  '果實': '✨',
+};
+
+const formatDate = (d: Date) => {
+  const forestYear = d.getFullYear() + 3030;
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
+  return `森歷 ${forestYear}年 ${month}月${day}日`;
+};
+---
+
+<BaseLayout title="泰坦的年輪">
+  <section class="hero">
+    <h1>泰坦的年輪</h1>
+    <p class="subtitle">靛之森中央的古老巨木——根系深入虛空，枝枒觸及天際。</p>
+    <p class="subtitle-small">在此記錄每一圈年輪：思考、觀察、與沉靜的感知。</p>
+  </section>
+
+  <div class="separator"></div>
+
+  <section class="posts">
+    {sortedPosts.length === 0 && (
+      <p class="empty">年輪尚在形成中⋯⋯</p>
+    )}
+
+    {sortedPosts.map(post => (
+      <article class="post-card">
+        <a href={`/rings/${post.id}`}>
+          <span class="post-meta">
+            <span class="category">{categoryEmoji[post.data.category] || '🌳'} {post.data.category}</span>
+            <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+          </span>
+          <h2>{post.data.title}</h2>
+          {post.data.excerpt && <p class="excerpt">{post.data.excerpt}</p>}
+        </a>
+      </article>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: var(--space-lg) 0;
+  }
+
+  .hero h1 {
+    font-size: 2.8rem;
+    margin-bottom: var(--space-sm);
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    text-indent: 0;
+    font-style: italic;
+  }
+
+  .subtitle-small {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    text-indent: 0;
+    margin-top: 0.5em;
+  }
+
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .post-card {
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--gold-glow);
+    transition: border-color var(--transition-normal);
+  }
+
+  .post-card:hover {
+    border-color: var(--gold-dim);
+  }
+
+  .post-card a {
+    display: block;
+    color: inherit;
+  }
+
+  .post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+
+  .category {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+  }
+
+  time {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  .post-card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.3em;
+    transition: color var(--transition-normal);
+  }
+
+  .post-card:hover h2 {
+    color: var(--gold-bright);
+  }
+
+  .excerpt {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-indent: 0;
+    line-height: 1.6;
+  }
+
+  .empty {
+    text-align: center;
+    color: var(--text-dim);
+    font-style: italic;
+    text-indent: 0;
+    padding: var(--space-lg) 0;
+  }
+
+  @media (max-width: 600px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+  }
+</style>

@@ -1,0 +1,126 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = '靛之森中央的古老巨木——根系深入虛空，枝枒觸及天際。泰坦在此記錄年輪、思考與觀察。' } = Astro.props;
+const siteTitle = '泰坦的年輪';
+const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
+---
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:site_name" content={siteTitle} />
+  <meta property="og:locale" content="zh_TW" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="/" class="site-title">🌳 泰坦的年輪</a>
+      <div class="nav-links">
+        <a href="/">年輪</a>
+        <a href="https://ainomori.tw" target="_blank" rel="noopener">靛之森</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="separator"></div>
+    <p>泰坦不語，卻知曉一切。</p>
+    <p class="footer-sub">
+      <a href="https://ainomori.tw">靛之森</a> · 
+      森歷 {new Date().getFullYear() + 3030}年
+    </p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .site-header {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--gold-glow);
+  }
+
+  .site-header nav {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .site-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: var(--space-sm);
+  }
+
+  .nav-links a {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .nav-links a:hover {
+    color: var(--gold);
+  }
+
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--space-lg) var(--space-md);
+    min-height: 60vh;
+  }
+
+  .site-footer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--space-md);
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  .site-footer p {
+    text-indent: 0;
+    margin-bottom: 0.5em;
+  }
+
+  .footer-sub {
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 600px) {
+    main {
+      padding: var(--space-md) var(--space-sm);
+    }
+  }
+</style>
